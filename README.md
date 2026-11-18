@@ -1,44 +1,52 @@
-# CAD 자동 견적 Static V1
+# CAD 자동 견적 V4 (GitHub Pages)
+
+첨부된 '컷온 부품 단가 산출' 화면의 섹션 배치와 정보 구조를 참고하여 제작한 **독립적인 정적 웹앱**입니다. 원본 서비스의 소스코드를 사용하지 않았습니다.
 
 ## 배포
 
-이 폴더의 `index.html`, `app.js`, `style.css`를 GitHub Pages 또는 Cloudflare Pages에 그대로 올리면 됩니다. 빌드 명령은 필요하지 않습니다.
+1. ZIP 압축을 해제합니다.
+2. GitHub `v2` 저장소 또는 새 `v4` 저장소의 최상위(root)에 `index.html`, `style.css`, `app.js`, `drawing1-preview.svg`, `drawing1-analysis.json`, `blue_prices_sample.csv`를 올립니다.
+3. GitHub Settings → Pages → Deploy from a branch → `main` / `(root)`를 선택합니다.
+4. `https://duyeong625.github.io/v4/` (저장소 이름이 v4인 경우)로 접속합니다.
 
-로컬 미리보기:
+## 주요 기능
 
-```bash
-python -m http.server 8080
-```
+- 참고 화면과 유사한 고객·요구 / 견적 조건 / 합계 / 도면 분석 / 단가 / 견적 이력 배치
+- SUS304 2T, 204(W)×547(H)×622(D)mm, 1개를 초기 입력값으로 제공
+- `도면1.dxf`에서 추출된 미리보기 SVG 표시. 미리보기는 투상도이며 전개도가 아닙니다.
+- 전개 면적·절단 길이·절곡 횟수·단가 입력 및 확인 체크 전에는 금액 계산을 막습니다.
+- 재료비(면적×두께×밀도×수량÷이용률×단가), 절단비, 절곡비, 셋업비, 외주비, 간접비, 등급 보정, 최소 단가 계산
+- 블루시스템 CSV 템플릿 가져오기. `category`와 `unit`이 일치하는 경우만 단가 자동 매핑
+- 견적 이력(localStorage), 이력 검색, 불러오기, 버전 재견적, JSON 백업/복원, 견적 미리보기·인쇄·CSV 출력
 
-브라우저에서 `http://localhost:8080` 접속.
+## 단가 CSV
 
-## 제공 기능
-- ASCII DXF의 LINE/LWPOLYLINE/CIRCLE/ARC/TEXT/MTEXT 객체 수 집계, 선·원 미리보기, 좌표 범위 추출
-- PDF 브라우저 미리보기
-- 판재/형강/파이프 자재비·절단비·기타 가공비·간접비·이윤율 계산
-- CSV 단가 가져오기 및 일부 단가 항목 수동 적용
-- 브라우저 localStorage 견적 이력, JSON 백업·복원
+필수 헤더: `external_code,name,category,unit,unit_price`
+선택 헤더: `effective_date`
+카테고리 및 단위: material/kg, cutting/m, bending/ea, setup/job.
+실제 블루시스템 파일의 열·단위·코드는 확인되지 않았습니다. 변환 작업이 필요할 수 있습니다.
 
-## 제한 및 주의
-- **DWG 자동 분석 불가**: 별도 CAD에서 ASCII DXF로 변환해야 함
-- PDF **자동 치수 추출 불가**: 미리보기만 제공
-- DXF 좌표의 단위를 확인하지 않으며, 블록 INSERT, SPLINE, bulge, 원호 시각화, 복합 형상 면적, 홀 판정, 자동 재질 판정 미지원
-- 추출된 범위는 도면 전체 객체의 bounding box이므로 실제 부품 치수와 다를 수 있음
-- CSV 파일은 실제 블루시스템 API 연동이 아닌 수동 가져오기 방식임
-- localStorage는 사용자/브라우저마다 별도이며 데이터가 삭제될 수 있음. 민감한 데이터나 공동 사용 업무에는 적합하지 않음
-- 로그인, 공유 DB, 사용자별 권한, 승인 이력, 서버 측 백업, 실제 Excel/PDF 견적서 출력 없음
-- 원가 계산은 참고용이며 구매 규격, 네스팅, 실제 가공 시간, VAT 등을 포함하지 않음
+## 중요한 제약
 
-## 단가 CSV 열
-`external_code,name,category,unit,unit_price,effective_date`
+- GitHub Pages는 정적 호스팅입니다. 서버 DB, 로그인, 직원 간 공유는 제공되지 않습니다.
+- 견적 이력은 현재 브라우저의 localStorage에만 저장됩니다. 주기적으로 JSON 백업하세요.
+- 업로드한 DXF를 자동으로 정확하게 렌더링하거나 전개 형상을 산출하지 않습니다. 새 DXF는 객체 개수 후보만 표시합니다.
+- 도면 미리보기의 2D 투상도 선 길이를 실제 레이저 절단 길이로 사용하지 않습니다.
+- '가공 여유(mm)'는 조건 기록용이며 네스팅 계산에 적용하지 않습니다. 실제 이용률을 별도로 입력해야 합니다.
+- A/B/C 등급 보정은 **예시 정책** (A=0.95, B=1.00, C=1.10)입니다. 업체 기준 확인 후 변경하세요.
+- 원가 산식은 견적 시뮬레이션이며 판금 전개, K-factor, 장비별 시간·최소 비용을 대체하지 않습니다.
+- GitHub Public 저장소에 실제 고객 도면이나 기밀 단가를 업로드하지 마세요. 제공된 SVG는 사용자가 첨부한 도면에서 생성된 파일이므로 공개 배포 전 기밀 여부를 확인하세요.
 
-예: `MAT-SS400,SS400 자재비,material,kg,1500,2026-11-18`
+## 로컬 테스트
 
-## GitHub Pages
-1. GitHub 저장소 생성 후 파일 3개 업로드
-2. Settings → Pages → Build and deployment → Deploy from a branch
-3. Branch `main`, Folder `/ (root)` 선택 및 저장
-4. 제공된 `https://<username>.github.io/<repository>/` URL로 접속
+`python -m http.server 8080` 실행 후 `http://localhost:8080` 접속.
+`node --check app.js`로 JavaScript 문법 확인.
 
-## Cloudflare Pages
-Cloudflare Pages에서 새 프로젝트 생성 후 정적 파일 폴더를 Direct Upload로 배포. 사이트가 외부에 공개될 수 있으므로 견적 자료 취급에 유의.
+## 견적 입력 검증 시나리오
+
+1. 초기 화면에서는 '산출 대기'가 보여야 합니다.
+2. 전개 면적 300000, 절단 길이 3, 절곡 횟수 4를 입력합니다.
+3. CSV 예제를 가져와 자재/절단/절곡/셋업 단가를 적용합니다.
+4. 검증 체크박스를 선택하면 공급가와 세부 원가가 표시됩니다.
+5. 견적서 미리보기 → 견적 이력 저장 → JSON 백업을 확인합니다.
+
