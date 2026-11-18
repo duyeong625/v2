@@ -1,0 +1,41 @@
+{
+  "source_file": "도면1.dxf",
+  "dxf_version": "AC1027",
+  "insunits": 0,
+  "entities": 1609,
+  "entity_types": {
+    "DIMENSION": 3,
+    "SPLINE": 1606
+  },
+  "layers": {
+    "기본값": 3,
+    "Make2D$보이는$커브": 333,
+    "Make2D$숨겨진$커브": 1273
+  },
+  "dimensions_mm": [
+    622.0,
+    547.0,
+    204.0
+  ],
+  "confirmed": {
+    "width_mm": 204,
+    "height_mm": 547,
+    "depth_mm": 622,
+    "material": "SUS304",
+    "thickness_mm": 2,
+    "quantity": 1,
+    "process": "laser_cut_and_bend"
+  },
+  "preview": {
+    "spline_flatten_tolerance_drawing_units": 1.5,
+    "visible_curve_length_drawing_units_approx": 16526.17,
+    "hidden_curve_length_drawing_units_approx": 9022.57,
+    "note": "투상도 곡선 길이이며 절단 길이가 아님. DXF INSUNITS=0이므로 길이 단위도 미확정."
+  },
+  "quotation_requirements": [
+    "전개 면적 또는 검증된 전개 형상",
+    "절단 길이",
+    "절곡 횟수",
+    "실제 단가"
+  ]
+}
